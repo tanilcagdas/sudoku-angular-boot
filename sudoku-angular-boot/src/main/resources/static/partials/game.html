@@ -1,0 +1,77 @@
+
+
+    <div
+    class="container">
+
+    <div>
+        <table id="sudokutable" class="  sudoku-table" >
+
+
+
+            <tr ng-repeat="x in sudoku.rowArray">
+                <td class="column" ng-repeat="y in x.group">
+
+                    <input type='text' style="color:{{y.color}};" size='1' ng-model="y.value" 
+                    onkeypress="if ( isNaN(String.fromCharCode(event.keyCode) )) return false;"
+                    ng-keypress="inputChange(y,$event)"
+                    class="cell grp{{y.threeByThreeSquare.index}}"
+                    ng-disabled="y.found" >
+
+
+                </td>
+            </tr>
+
+
+        </table>
+
+
+    </div>
+    
+    <div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">User : {{user.name}}</label>
+                </div>
+                
+            </form>
+        </div>
+        
+        connectedUsers
+		<table id="connectedUsers" class="tbl table" >
+            <tr ng-repeat="x in connectedUsers">
+                <td >
+                   {{x}}
+                </td>
+            </tr>
+        </table>
+        
+        
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Moves</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </form>
+</div>
+
+
+
+
+

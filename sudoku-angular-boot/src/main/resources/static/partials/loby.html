@@ -1,0 +1,42 @@
+
+
+
+
+	<div id="main-content" class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<form class="form-inline">
+					<div class="form-group">
+						<label for="connect">WebSocket connection:</label>
+						<button id="connect" class="btn btn-default" type="submit" ng-click="connect()">Connect</button>
+						<button id="disconnect" class="btn btn-default" type="submit" ng-click="disconnect()" >Disconnect</button>
+<!-- 						<button id="disconnect" class="btn btn-default" type="submit" -->
+<!-- 							disabled="disabled">Disconnect</button> -->
+							<a id=start ng-href="#/game" class="btn btn-default" >start</a>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-6">
+				<form class="form-inline">
+					<div class="form-group">
+						<label for="name">What is your name?</label> <input type="text"
+							id="name" ng-model="user.name" class="form-control" placeholder="Your name here...">
+					</div>
+
+				</form>
+			</div>
+		</div>
+		
+		connectedUsers
+		<table id="connectedUsers" class="tbl table" >
+            <tr ng-repeat="x in connectedUsers">
+                <td >
+                   {{x}}
+                </td>
+            </tr>
+
+
+        </table>
+		
+
+	</div>
