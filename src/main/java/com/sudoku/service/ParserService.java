@@ -1,6 +1,7 @@
 package com.sudoku.service;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,8 +15,10 @@ import com.sudoku.beans.Sudoku;
 @Service
 public class ParserService {
 
+	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
 	public Sudoku parseWebSudoku() throws IOException {
+		
 
 		Sudoku inputSudoku = new Sudoku();
 		Document doc = Jsoup.connect("http://show.websudoku.com/").get();
@@ -31,12 +34,12 @@ public class ParserService {
 					cell.setValue(0);
 				}
 
-				// System.out.println("cell : "+i+j+" value : "+value);
+				// logger.info("cell : "+i+j+" value : "+value);
 			}
 		}
 
 		Elements elements2 = doc.select("a[href], [title]");
-		System.out.println("Loaded web sudoku");
+		logger.info("Loaded web sudoku");
 		// contains "Copy link for this puzzle"
 		String puzzleId = null;
 		String puzzleLevelStr =  null;
@@ -81,7 +84,7 @@ public class ParserService {
 		}
 
 		Elements elements2 = doc.select("a[href], [title]");
-		System.out.println("Loaded web sudoku");
+		logger.info("Loaded web sudoku");
 		// contains "Copy link for this puzzle"
 		String puzzleId = null;
 		String puzzleLevelStr = null;

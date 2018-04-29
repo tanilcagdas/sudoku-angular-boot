@@ -3,8 +3,11 @@ package com.sudoku.beans;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 public class Cell extends Observable implements Observer {
+	
+	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
 	private static final String RED = "red";
 	private static final String BLUE = "blue";
@@ -65,7 +68,7 @@ public class Cell extends Observable implements Observer {
 		setChanged();
 		getRow().getSudoku().setHowManyCellsLeft(
 				getRow().getSudoku().getHowManyCellsLeft() - 1);
-		System.out.println("Cell with coordinates : " + getRow().getIndex()
+		logger.info("Cell with coordinates : " + getRow().getIndex()
 				+ "," + getColumn().getIndex() + " value set by "
 				+ Thread.currentThread().getStackTrace()[2].toString()
 				+ "\n to : " + value);
@@ -82,7 +85,7 @@ public class Cell extends Observable implements Observer {
 		} else if (getValue() != 0 && found == true) {
 			this.found = found;
 		} else {
-			System.out.println("trying to set cell found to " + found
+			logger.info("trying to set cell found to " + found
 					+ " but value is " + getValue());
 		}
 	}
@@ -203,7 +206,7 @@ public class Cell extends Observable implements Observer {
 
 	private boolean clearGuess(int foundValue) {
 
-		// System.out.println(getGuesses().contains(foundValue));
+		// logger.info(getGuesses().contains(foundValue));
 		for (int gssidx = 0; gssidx < 9; gssidx++) {
 			if (getGuesses() != null && getGuesses().size() > gssidx
 					&& getGuesses().get(gssidx) == foundValue) {

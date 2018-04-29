@@ -2,10 +2,11 @@ package com.sudoku.beans;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Sudoku implements Cloneable, Comparable<Sudoku> {
 
-	
+	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 	private List<Row> rowArray= new ArrayList<Row>();
 	private List<Column> columnArray= new ArrayList<Column>();
 	private List<ThreeByThreeSquare> threeByThreeArray= new ArrayList<ThreeByThreeSquare>();
@@ -24,7 +25,7 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 			syncColumnsToRow();
 			syncThreeByThreeSquaresToRow();
 			registerAllObservers();
-			System.out.println("created new sudoku");
+			logger.info("created new sudoku");
 	}
 
 
@@ -112,14 +113,14 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 				
 					if(columnArray.size()<columnIndex+1){
 						columnArray.add( new Column(this,columnIndex));
-//						System.out.println("created collumn for row : "+ row +", collumn: "+ collumn );
+//						logger.info("created collumn for row : "+ row +", collumn: "+ collumn );
 					}
 					Cell cell=rowArray.get(rowIndex).getGroup().get(columnIndex);	
 					columnArray.get(columnIndex).getGroup().set(rowIndex, cell);
 					cell.setColumn(columnArray.get(columnIndex));
 //					Cell leftCell=collumnArray.get(collumn).getGroup().get(row);
 					
-//					System.out.println(leftCell.equals(rightCell)+" , "+leftCell.toString()+" , "+rightCell.toString());
+//					logger.info(leftCell.equals(rightCell)+" , "+leftCell.toString()+" , "+rightCell.toString());
 			}
 		}
 	}
@@ -154,7 +155,7 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 					//alt taraf ok 
 					if(threeByThreeArray.size()<threeByThreeIndex+1){
 						threeByThreeArray.add( new ThreeByThreeSquare(this,threeByThreeIndex));
-//						System.out.println("created ThreeByThreeSquare for group: "+group +", row : "+ row +", collumn: "+ collumn );
+//						logger.info("created ThreeByThreeSquare for group: "+group +", row : "+ row +", collumn: "+ collumn );
 					}
 					//alt taraf ok
 					Cell cell=rowArray.get(rowIndex).getGroup().get(columnIndex);	
@@ -162,7 +163,7 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 					cell.setThreeByThreeSquare(threeByThreeArray.get(threeByThreeIndex));
 //					Cell leftCell=threeByThreeArray.get(group).getGroup().get(groupCount);
 					
-//					System.out.println("For threebythree "+leftCell.equals(rightCell)+" , "+leftCell.toString()+" , "+rightCell.toString());
+//					logger.info("For threebythree "+leftCell.equals(rightCell)+" , "+leftCell.toString()+" , "+rightCell.toString());
 			}
 		}
 		
@@ -222,7 +223,7 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 	
 //	public static void main(String[] args) throws IOException {
 //		Sudoku testSudoku = parserService.parseWebSudoku();
-//		System.out.println(testSudoku.toString());
+//		logger.info(testSudoku.toString());
 //	}
 //	
 	@Override

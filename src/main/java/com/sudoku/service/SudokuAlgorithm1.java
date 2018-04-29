@@ -40,10 +40,10 @@ public class SudokuAlgorithm1 implements Algorithm {
 		if (sudokuSolution.getHowManyCellsLeft() == 0) {
 			sudokuSolution.setSolved(true);
 			sudokuSolution.setSudokuHasChanged(false);
-			System.out.println("Sudoku is solved");
+			logger.info("Sudoku is solved");
 			return sudokuSolution;
 		}
-		System.out.println("This is the trial number: " + sudokuSolution.getTrial());
+		logger.info("This is the trial number: " + sudokuSolution.getTrial());
 		sudokuSolution.incrementTrial();
 		return sudokuSolution;
 
@@ -96,7 +96,7 @@ public class SudokuAlgorithm1 implements Algorithm {
 		Consumer<? super Cell> action1 = cell -> determineCellsWhoHas1Guess(cell);
 		Consumer<? super Row> action = group -> group.getGroup().forEach(action1);
 		sudokuSolution.getRowArray().forEach(action);
-		System.out.println(sudokuSolution.getHowManyCellsLeft() + " Cells is waiting to be solved");
+		logger.info(sudokuSolution.getHowManyCellsLeft() + " Cells is waiting to be solved");
 	}
 
 	private void determineCellsWhoHas1Guess(Cell cell) {

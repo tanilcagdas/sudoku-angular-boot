@@ -31,7 +31,7 @@ public class SudokuAlgorithm2 implements Algorithm {
 				determineWhoHasUniqueGuessInGroup(sudokuSolution);
 			} catch (Exception e) {
 				if (e.getCause() instanceof SudokuException) {
-					System.out.println(e.getCause().getMessage());
+					logger.info(e.getCause().getMessage());
 					return sudokuSolution;
 				} else {
 					logger.log(Level.SEVERE, "Error Ocured", e);
@@ -41,7 +41,7 @@ public class SudokuAlgorithm2 implements Algorithm {
 		if (sudokuSolution.getHowManyCellsLeft() == 0) {
 			sudokuSolution.setSolved(true);
 			sudokuSolution.setSudokuHasChanged(false);
-			System.out.println("Sudoku is solved");
+			logger.info("Sudoku is solved");
 			return sudokuSolution;
 		}
 		return sudokuSolution;
@@ -75,7 +75,7 @@ sudokuSolution.getThreeByThreeArray().forEach(group -> determineWhoHasUniqueGues
 				if (uniqueGuessCount == 1) {
 					for (Cell cell : group.getGroup()) {
 						if (cell.getValue() == number) {
-							// System.out.println("The number : " + number +" is
+							// logger.info("The number : " + number +" is
 							// a
 							// unique guess but it exists in the group");
 							return;

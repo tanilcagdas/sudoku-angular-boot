@@ -23,6 +23,9 @@ public class BrainImpl implements BrainIF {
 	private NotSolvedWriter notSolvedWriter;
 
 	@Autowired
+	private SudokuValidator sudokuValidator;
+
+	@Autowired
 	@Qualifier("SudokuAlgorithm1")
 	private Algorithm sudokuAlgorithm1;
 
@@ -33,6 +36,10 @@ public class BrainImpl implements BrainIF {
 	@Autowired
 	@Qualifier("SudokuAlgorithm3")
 	private Algorithm sudokuAlgorithm3;
+
+	@Autowired
+	@Qualifier("SudokuAlgorithm4")
+	private Algorithm sudokuAlgorithm4;
 
 	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
@@ -61,26 +68,46 @@ public class BrainImpl implements BrainIF {
 		// Check if the sudoku has changed
 		sudoku.setTrial(1);
 		while (sudokuSolution.isSudokuHasChanged()) {
+		while (sudokuSolution.isSudokuHasChanged()) {
 			while (sudokuSolution.isSudokuHasChanged()) {
 				while (sudokuSolution.isSudokuHasChanged()) {
 					if(sudokuSolution.getHowManyCellsLeft() != 0){
 						sudokuAlgorithm1.useAlgorithm(sudokuSolution);
 						sudoku.incrementTrial();
+						logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 1");
+						if(!sudokuValidator.validate(sudokuSolution)){
+							return sudokuSolution;
+						}
 					}
 					
 				}
 				if(sudokuSolution.getHowManyCellsLeft() != 0){
 					sudokuAlgorithm2.useAlgorithm(sudokuSolution);
+					logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 2");
+					if(!sudokuValidator.validate(sudokuSolution)){
+						return sudokuSolution;
+					}
 					sudoku.incrementTrial();
 				}
 			}
 			if(sudokuSolution.getHowManyCellsLeft() != 0 && sudoku.getTrial() < 300){
 				sudokuAlgorithm3.useAlgorithm(sudokuSolution);
+				logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 3");
+				if(!sudokuValidator.validate(sudokuSolution)){
+					return sudokuSolution;
+				}
 				sudoku.incrementTrial();
 			}
-			System.out.println(sudokuSolution);
-			System.out.println();;
 		}
+		if(sudokuSolution.getHowManyCellsLeft() != 0){
+			sudokuSolution = sudokuAlgorithm4.useAlgorithm(sudokuSolution);
+			logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 4");
+			if(!sudokuValidator.validate(sudokuSolution)){
+				return sudokuSolution;
+			}
+			sudoku.incrementTrial();
+		}
+	}
 		if (!sudokuSolution.isSolved()) {
 			try {
 				notSolvedWriter.log(sudoku, sudokuSolution);
@@ -136,7 +163,7 @@ public class BrainImpl implements BrainIF {
 			cell.setFound(true);
 		}
 
-		// System.out.println(cell.getValue() + ", " + cell.isFound());
+		// logger.info(cell.getValue() + ", " + cell.isFound());
 	}
 
 	private void evaluateGuesses(Sudoku sudoku) throws SecurityException, IllegalArgumentException,

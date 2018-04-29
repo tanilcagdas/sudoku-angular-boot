@@ -21,7 +21,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 
 	private void determineWhoHasUniqueGuessInGroupHorizontal(Sudoku sudokuSolution) {
 		for (int i = 0; i < sudokuSolution.getThreeByThreeArray().size(); i++) {
-			System.out.println("determineWhoHasUniqueGuessInGroupOfGroupForGroup : " + i);
+			logger.info("determineWhoHasUniqueGuessInGroupOfGroupForGroup : " + i);
 			Difs difs = determineWhoHasUniqueGuessInGroupOfGroupForGroup(sudokuSolution.getThreeByThreeArray().get(i));
 			clearGuesseswithdifs(sudokuSolution, difs, i);
 		}
@@ -30,7 +30,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 
 	private void determineWhoHasUniqueGuessInGroupVertical(Sudoku sudokuSolution) {
 		for (int i = 0; i < sudokuSolution.getThreeByThreeArray().size(); i++) {
-			System.out.println("determineWhoHasUniqueGuessInGroupOfGroupVertical : " + i);
+			logger.info("determineWhoHasUniqueGuessInGroupOfGroupVertical : " + i);
 			Difs difs = determineWhoHasUniqueGuessInGroupOfGroupVertical(sudokuSolution.getThreeByThreeArray().get(i));
 			clearGuesseswithdifsVertical(sudokuSolution, difs, i);
 		}
@@ -202,7 +202,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 		List<Integer> dif3 = subtract(grp3Gss, grp1Gss);
 		dif3 = subtract(dif3, grp2Gss);
 		Difs difs = new Difs(dif1, dif2, dif3);
-		System.out.println(difs);
+		logger.info(difs.toString());
 
 		return difs;
 	}
@@ -215,7 +215,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 //			Consumer<? super Integer> action = i-> grpGss.add(i);
 //			cell.getGuesses().forEach(action);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -235,7 +235,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 	// str += difs.dif3[i];
 	// str += ';'
 	// }
-	// System.out.println(str);
+	// logger.info(str);
 	//
 	// }
 
@@ -247,7 +247,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 	// }
 	//
 	// }catch(Exception e){
-	// System.out.println(e);
+	// logger.info(e);
 	// }
 	//
 	// }
@@ -302,7 +302,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 		if (sudoku.getHowManyCellsLeft() == 0) {
 			sudoku.setSolved(true);
 			sudoku.setSudokuHasChanged(false);
-			System.out.println("Sudoku is solved");
+			logger.info("Sudoku is solved");
 			return sudoku;
 		}
 		return sudoku;

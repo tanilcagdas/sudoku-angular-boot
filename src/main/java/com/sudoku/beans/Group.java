@@ -1,30 +1,33 @@
 package com.sudoku.beans;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public abstract class Group {
-   
-   private int index;
-	
+
+	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+
+	private int index;
+
 	private ArrayList<Cell> group;
 
 	private Sudoku sudoku;
-	
-	public Group(Sudoku sudoku,int index){
+
+	public Group(Sudoku sudoku, int index) {
 		this.index = index;
-		this.sudoku=sudoku;
-		if (group==null){
-		   group=new ArrayList<Cell>();
-		   
-		   for(int i=0;i<9;i++){
-		      Cell cell = new Cell(this);
-		      group.add( cell ); 
-		   }	
+		this.sudoku = sudoku;
+		if (group == null) {
+			group = new ArrayList<Cell>();
+
+			for (int i = 0; i < 9; i++) {
+				Cell cell = new Cell(this);
+				group.add(cell);
+			}
 		}
 	}
 
 	public Group() {
-		System.out.println();
+	
 	}
 
 	public ArrayList<Cell> getGroup() {
@@ -34,30 +37,31 @@ public abstract class Group {
 	public void setGroup(ArrayList<Cell> group) {
 		this.group = group;
 	}
-	
+
 	public int getIndex() {
-      return index;
-   }
+		return index;
+	}
 
-   public void setIndex(int index) {
-      this.index = index;
-   }
+	public void setIndex(int index) {
+		this.index = index;
+	}
 
-   /**
- * @return the sudoku
- */
-public Sudoku getSudoku() {
-	return sudoku;
-}
+	/**
+	 * @return the sudoku
+	 */
+	public Sudoku getSudoku() {
+		return sudoku;
+	}
 
-/**
- * @param sudoku the sudoku to set
- */
-public void setSudoku(Sudoku sudoku) {
-	this.sudoku = sudoku;
-}
+	/**
+	 * @param sudoku
+	 *            the sudoku to set
+	 */
+	public void setSudoku(Sudoku sudoku) {
+		this.sudoku = sudoku;
+	}
 
-@Override
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		for (Cell cell : group) {
@@ -66,6 +70,5 @@ public void setSudoku(Sudoku sudoku) {
 		}
 		return sb.toString();
 	}
-	
-	
+
 }

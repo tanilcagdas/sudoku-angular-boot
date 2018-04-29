@@ -48,7 +48,7 @@ public class SudokuController {
 	public List<Row> parseRandom() {
 		Sudoku sudoku = null;
 		try {
-			sudoku = parserService.parseWebSudoku(0, 3);
+			sudoku = parserService.parseWebSudoku(0, 4);
 			// sudoku = brain.solveSudoku(sudoku);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -82,7 +82,7 @@ public class SudokuController {
 //	@MessageMapping("/sudoku")
 //	@SendTo("/cellMessage/{id}")
 //	public CellMessage greeting(CellMessage message, @DestinationVariable int id) throws Exception {
-//		System.out.println(id);
+//		logger.info(id);
 //		Thread.sleep(1000); // simulated delay
 //		message.getCell().setFound(true);
 //		return message;

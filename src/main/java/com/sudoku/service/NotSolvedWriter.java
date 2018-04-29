@@ -13,6 +13,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ import com.sudoku.beans.Sudoku;
 
 @Service
 public class NotSolvedWriter {
+	
+	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
 	public  void log(Sudoku sudoku, Sudoku unfinishedSolution)
 			throws IOException {
@@ -48,7 +51,7 @@ public class NotSolvedWriter {
 		writer.write(sb.toString());
 		writer.close();
 		}else{
-			System.out.println("This is an empty sudoku aint writing");
+			logger.info("This is an empty sudoku aint writing");
 		}		
 	}
 
@@ -68,7 +71,7 @@ public class NotSolvedWriter {
 					char c = (char) reader.read();
 					str = str + c;
 				}
-				// System.out.println(str);
+				// logger.info(str);
 				reader.close();
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -77,7 +80,7 @@ public class NotSolvedWriter {
 				for (int j = 0; j < 9; j++) {
 					int value = Character.getNumericValue(((str.split("" + i
 							+ j + " : "))[1].charAt(0)));
-					// System.out.println(value);
+					// logger.info(value);
 					sudoku.getRowArray().get(i).getGroup().get(j)
 							.setValue(value);
 				}
