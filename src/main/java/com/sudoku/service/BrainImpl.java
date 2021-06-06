@@ -45,7 +45,7 @@ public class BrainImpl implements BrainIF {
 
 	public static String RED = "red";
 	public static String BLUE = "blue";
-	private static ArrayList<Integer> DEFAULT_GUESSES = new ArrayList<Integer>();
+	public static ArrayList<Integer> DEFAULT_GUESSES = new ArrayList<Integer>();
 	{
 		if (DEFAULT_GUESSES.size() == 0) {
 			for (int i = 1; i < 10; i++)
@@ -99,14 +99,14 @@ public class BrainImpl implements BrainIF {
 				sudoku.incrementTrial();
 			}
 		}
-		if(sudokuSolution.getHowManyCellsLeft() != 0){
-			sudokuSolution = sudokuAlgorithm4.useAlgorithm(sudokuSolution);
-			logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 4");
-			if(!sudokuValidator.validate(sudokuSolution)){
-				return sudokuSolution;
-			}
-			sudoku.incrementTrial();
-		}
+//		if(sudokuSolution.getHowManyCellsLeft() != 0){
+//			sudokuSolution = sudokuAlgorithm4.useAlgorithm(sudokuSolution);
+//			logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 4");
+//			if(!sudokuValidator.validate(sudokuSolution)){
+//				return sudokuSolution;
+//			}
+//			sudoku.incrementTrial();
+//		}
 	}
 		if (!sudokuSolution.isSolved()) {
 			try {

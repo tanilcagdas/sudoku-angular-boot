@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.sudoku.beans.Cell;
@@ -16,7 +18,18 @@ import com.sudoku.beans.Sudoku;
 
 @Service("SudokuAlgorithm3")
 public class SudokuAlgorithm3 implements Algorithm {
-	
+
+	@Autowired
+	private SudokuValidator sudokuValidator;
+
+	@Autowired
+	@Qualifier("SudokuAlgorithm1")
+	private Algorithm sudokuAlgorithm1;
+
+	@Autowired
+	@Qualifier("SudokuAlgorithm2")
+	private Algorithm sudokuAlgorithm2;
+
 	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
 	private void determineWhoHasUniqueGuessInGroupHorizontal(Sudoku sudokuSolution) {
@@ -47,10 +60,16 @@ public class SudokuAlgorithm3 implements Algorithm {
 				continue;
 			}
 			if (difs.dif1.size() > 0 || difs.dif2.size() > 0 || difs.dif3.size() > 0) {
-				BrainImpl.BLUE = "green";
-				BrainImpl.RED = "orange";
+//				BrainImpl.BLUE = "green";
+//				BrainImpl.RED = "orange";
+				System.out.println("Going to clear based on diffs " + difs);
 				clearGuessesFromSmallGroup(sudokuSolution.getThreeByThreeArray().get(i), difs);
 				sudokuSolution.setSudokuHasChanged(true);
+				sudokuSolution = runAlgorithm1and2(sudokuSolution);
+				sudokuSolution = resetGuesses(sudokuSolution);
+				printCellGuesses(sudokuSolution);
+				sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
+				printCellGuesses(sudokuSolution);
 			}
 
 		}
@@ -65,10 +84,16 @@ public class SudokuAlgorithm3 implements Algorithm {
 				continue;
 			}
 			if (difs.dif1.size() > 0 || difs.dif2.size() > 0 || difs.dif3.size() > 0) {
-				BrainImpl.BLUE = "green";
-				BrainImpl.RED = "orange";
+//				BrainImpl.BLUE = "green";
+//				BrainImpl.RED = "orange";
+				System.out.println("Going to clear based on diffs from vertical results" + difs);
 				clearGuessesFromSmallGroupVertical(sudokuSolution.getThreeByThreeArray().get(i), difs);
 				sudokuSolution.setSudokuHasChanged(true);
+				sudokuSolution = runAlgorithm1and2(sudokuSolution);
+				sudokuSolution = resetGuesses(sudokuSolution);
+				printCellGuesses(sudokuSolution);
+				sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
+				printCellGuesses(sudokuSolution);
 			}
 
 		}
@@ -79,8 +104,11 @@ public class SudokuAlgorithm3 implements Algorithm {
 		for (int number = 0; number < 3; number++) {
 			try {
 				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null)
-				cell.getGuesses().removeAll(difs.dif1);
+				if(cell.getGuesses() != null) {
+
+					cell.getGuesses().removeAll(difs.dif2);
+					cell.getGuesses().removeAll(difs.dif3);
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error Ocured", e);
 			}
@@ -89,8 +117,11 @@ public class SudokuAlgorithm3 implements Algorithm {
 		for (int number = 3; number < 6; number++) {
 			try {
 				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null)
-				cell.getGuesses().removeAll(difs.dif2);
+				if(cell.getGuesses() != null) {
+
+					cell.getGuesses().removeAll(difs.dif1);
+					cell.getGuesses().removeAll(difs.dif3);
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error Ocured", e);
 			}
@@ -99,8 +130,11 @@ public class SudokuAlgorithm3 implements Algorithm {
 		for (int number = 6; number < 9; number++) {
 			try {
 				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null)
-				cell.getGuesses().removeAll(difs.dif3);
+				if(cell.getGuesses() != null) {
+
+					cell.getGuesses().removeAll(difs.dif1);
+					cell.getGuesses().removeAll(difs.dif2);
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error Ocured", e);
 			}
@@ -113,8 +147,11 @@ public class SudokuAlgorithm3 implements Algorithm {
 		for (int number = 0; number < 7; number += 3) {
 			try {
 				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null)
-				cell.getGuesses().removeAll(difs.dif1);
+				if(cell.getGuesses() != null) {
+
+					cell.getGuesses().removeAll(difs.dif2);
+					cell.getGuesses().removeAll(difs.dif3);
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error Ocured", e);
 			}
@@ -123,8 +160,10 @@ public class SudokuAlgorithm3 implements Algorithm {
 		for (int number = 3; number < 8; number += 3) {
 			try {
 				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null)
-				cell.getGuesses().removeAll(difs.dif2);
+				if(cell.getGuesses() != null) {
+					cell.getGuesses().removeAll(difs.dif1);
+					cell.getGuesses().removeAll(difs.dif3);
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error Ocured", e);
 			}
@@ -133,8 +172,10 @@ public class SudokuAlgorithm3 implements Algorithm {
 		for (int number = 6; number < 9; number += 3) {
 			try {
 				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null)
-				cell.getGuesses().removeAll(difs.dif3);
+				if(cell.getGuesses() != null) {
+					cell.getGuesses().removeAll(difs.dif1);
+					cell.getGuesses().removeAll(difs.dif2);
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error Ocured", e);
 			}
@@ -290,6 +331,8 @@ public class SudokuAlgorithm3 implements Algorithm {
 	@Override
 	public Sudoku useAlgorithm(Sudoku sudoku) {
 
+		printCellValues(sudoku);
+
 		if (sudoku.getHowManyCellsLeft() != 0)
 			try {
 				determineWhoHasUniqueGuessInGroupHorizontal(sudoku);
@@ -305,8 +348,64 @@ public class SudokuAlgorithm3 implements Algorithm {
 			logger.info("Sudoku is solved");
 			return sudoku;
 		}
+
+		printCellValues(sudoku);
+		printCellGuesses(sudoku);
 		return sudoku;
 
+	}
+
+	public Sudoku runAlgorithm1and2(Sudoku sudokuSolution){
+		while (sudokuSolution.isSudokuHasChanged()) {
+			while (sudokuSolution.isSudokuHasChanged()) {
+				if(sudokuSolution.getHowManyCellsLeft() != 0){
+					sudokuAlgorithm1.useAlgorithm(sudokuSolution);
+//					sudoku.incrementTrial();
+					logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 1");
+					if(!sudokuValidator.validate(sudokuSolution)){
+						return sudokuSolution;
+					}
+				}
+
+			}
+			if(sudokuSolution.getHowManyCellsLeft() != 0){
+				sudokuAlgorithm2.useAlgorithm(sudokuSolution);
+				logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 2");
+				if(!sudokuValidator.validate(sudokuSolution)){
+					return sudokuSolution;
+				}
+//				sudoku.incrementTrial();
+			}
+		}
+
+		return sudokuSolution;
+	}
+
+	private Sudoku resetGuesses(Sudoku sudokuSolution) {
+		sudokuSolution.getRowArray().forEach(row -> row.getGroup().forEach(cell -> {
+			if(cell.getValue() != 0) {
+				cell.setGuesses(new ArrayList<>(BrainImpl.DEFAULT_GUESSES));
+			}
+		}));
+		return sudokuSolution;
+	}
+
+	private void printCellGuesses(Sudoku sudoku) {
+		sudoku.getRowArray().forEach(row->{
+			row.getGroup().forEach( cell -> {
+				System.out.print(cell.getGuesses() + " : ");
+			});
+			System.out.println();
+		});
+	}
+
+	private void printCellValues(Sudoku sudoku) {
+		sudoku.getRowArray().forEach(row->{
+			row.getGroup().forEach( cell -> {
+				System.out.print(cell.getValue() + " : ");
+			});
+			System.out.println();
+		});
 	}
 }
 

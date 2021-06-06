@@ -91,7 +91,9 @@ public class ParserService {
 		for (Element element : elements2) {
 			if (element.toString().contains("Copy link for this puzzle")) {
 				puzzleId = element.toString().split("</A>")[0].split("set_id=")[1].split("\"")[0];
+				logger.info("puzzle id " +  puzzleId);
 				puzzleLevelStr = element.toString().split("level=")[1].split("&")[0];
+				logger.info("puzzle level " +  puzzleLevelStr);
 			}
 		}
 		try {

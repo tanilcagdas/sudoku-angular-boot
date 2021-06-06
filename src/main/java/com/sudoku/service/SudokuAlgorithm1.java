@@ -104,7 +104,7 @@ public class SudokuAlgorithm1 implements Algorithm {
 			int value = cell.getGuesses().get(0);
 			cell.setValue(value);
 			cell.setColor(BrainImpl.RED);
-			if (cell.getRow().getSudoku().isSudokuHasChanged() == false) {
+			if (!cell.getRow().getSudoku().isSudokuHasChanged()) {
 				cell.getRow().getSudoku().setSudokuHasChanged(true);
 				logger.log(Level.INFO, "sudoku has changed value has been found");
 			}
