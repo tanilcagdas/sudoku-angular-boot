@@ -91,6 +91,10 @@
  		$rootScope.sudoku  = SudokuService.loadDemoSudoku($rootScope.sudoku )
  	};
 
+ 	$scope.parseWebSudoku = function(){
+ 		$rootScope.sudoku  = SudokuService.parse()
+ 	};
+
  	init();
 
  	console.log($rootScope.sudoku);
