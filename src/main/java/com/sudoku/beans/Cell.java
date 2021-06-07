@@ -69,9 +69,10 @@ public class Cell extends Observable implements Observer {
 		getRow().getSudoku().setHowManyCellsLeft(
 				getRow().getSudoku().getHowManyCellsLeft() - 1);
 		logger.info("Cell with coordinates : " + getRow().getIndex()
-				+ "," + getColumn().getIndex() + " value set by "
-				+ Thread.currentThread().getStackTrace()[2].toString()
-				+ "\n to : " + value);
+				+ "," + getColumn().getIndex()
+//				+ " value set by "
+//				+ Thread.currentThread().getStackTrace()[2].toString()
+				+ " to : " + value);
 		notifyObservers(this);
 	}
 

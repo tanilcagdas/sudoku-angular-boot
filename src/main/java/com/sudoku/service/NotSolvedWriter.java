@@ -44,7 +44,13 @@ public class NotSolvedWriter {
             sb.append("\n");
             sb.append(unfinishedSolution.toString());
 
-            String outputFile = "/sudokusolver/unSolvedSudoku_"
+            String outputFolder = "sudokusolver";
+            File folder = new File(outputFolder);
+            if(!folder.exists()){
+                folder.mkdir();
+            }
+
+            String outputFile = "sudokusolver/unSolvedSudoku_"
                     + sudoku.getPuzzleId() + "_" + sudoku.getPuzzleLevel();
             File file = new File(outputFile);
             if (!file.exists()) {

@@ -76,6 +76,7 @@ public class BrainImpl implements BrainIF {
 						sudoku.incrementTrial();
 						logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 1");
 						if(!sudokuValidator.validate(sudokuSolution)){
+							logger.log(Level.SEVERE, "Validation Failed");
 							return sudokuSolution;
 						}
 					}
@@ -90,7 +91,7 @@ public class BrainImpl implements BrainIF {
 					sudoku.incrementTrial();
 				}
 			}
-			if(sudokuSolution.getHowManyCellsLeft() != 0 && sudoku.getTrial() < 300){
+			if(sudokuSolution.getHowManyCellsLeft() != 0 && sudoku.getTrial() < 9){
 				sudokuAlgorithm3.useAlgorithm(sudokuSolution);
 				logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 3");
 				if(!sudokuValidator.validate(sudokuSolution)){
@@ -112,7 +113,7 @@ public class BrainImpl implements BrainIF {
 			try {
 				notSolvedWriter.log(sudoku, sudokuSolution);
 			} catch (IOException e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
+				logger.log(Level.SEVERE, "Error Occurred", e);
 			}
 		}
 		return sudokuSolution;
@@ -122,7 +123,7 @@ public class BrainImpl implements BrainIF {
 		try {
 			evaluateGuesses(sudokuSolution);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error Ocured", e);
+			logger.log(Level.SEVERE, "Error Occurred", e);
 		}
 
 		sudokuSolution.setTrial(1);

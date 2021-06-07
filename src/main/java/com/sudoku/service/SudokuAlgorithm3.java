@@ -65,14 +65,19 @@ public class SudokuAlgorithm3 implements Algorithm {
 				System.out.println("Going to clear based on diffs " + difs);
 				clearGuessesFromSmallGroup(sudokuSolution.getThreeByThreeArray().get(i), difs);
 				sudokuSolution.setSudokuHasChanged(true);
-				sudokuSolution = runAlgorithm1and2(sudokuSolution);
-				sudokuSolution = resetGuesses(sudokuSolution);
-				printCellGuesses(sudokuSolution);
-				sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
-				printCellGuesses(sudokuSolution);
+				sudokuSolution = cleanUp(sudokuSolution);
 			}
 
 		}
+	}
+
+	private Sudoku cleanUp(Sudoku sudokuSolution) {
+//		sudokuSolution = runAlgorithm1and2(sudokuSolution);
+//		sudokuSolution = resetGuesses(sudokuSolution);
+//		printCellGuesses(sudokuSolution);
+//		sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
+//		printCellGuesses(sudokuSolution);
+		return sudokuSolution;
 	}
 
 	private void clearGuesseswithdifsVertical(Sudoku sudokuSolution, Difs difs, int index) {
@@ -89,11 +94,7 @@ public class SudokuAlgorithm3 implements Algorithm {
 				System.out.println("Going to clear based on diffs from vertical results" + difs);
 				clearGuessesFromSmallGroupVertical(sudokuSolution.getThreeByThreeArray().get(i), difs);
 				sudokuSolution.setSudokuHasChanged(true);
-				sudokuSolution = runAlgorithm1and2(sudokuSolution);
-				sudokuSolution = resetGuesses(sudokuSolution);
-				printCellGuesses(sudokuSolution);
-				sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
-				printCellGuesses(sudokuSolution);
+				sudokuSolution = cleanUp(sudokuSolution);
 			}
 
 		}
@@ -102,83 +103,57 @@ public class SudokuAlgorithm3 implements Algorithm {
 	private void clearGuessesFromSmallGroup(Group group, Difs difs) {
 
 		for (int number = 0; number < 3; number++) {
-			try {
-				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null) {
-
-					cell.getGuesses().removeAll(difs.dif2);
-					cell.getGuesses().removeAll(difs.dif3);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
-			}
+			clearGuessesCell(group, number, difs.dif2, difs.dif3);
 		}
 
 		for (int number = 3; number < 6; number++) {
-			try {
-				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null) {
-
-					cell.getGuesses().removeAll(difs.dif1);
-					cell.getGuesses().removeAll(difs.dif3);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
-			}
+			clearGuessesCell(group, number, difs.dif1, difs.dif3);
 		}
 
 		for (int number = 6; number < 9; number++) {
-			try {
-				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null) {
-
-					cell.getGuesses().removeAll(difs.dif1);
-					cell.getGuesses().removeAll(difs.dif2);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
-			}
+			clearGuessesCell(group, number, difs.dif1, difs.dif2);
 		}
 
+	}
+
+	private void clearGuessesCell(Group group, int number, List<Integer> difA, List<Integer> difB) {
+		try {
+			Cell cell = group.getGroup().get(number);
+			if (cell.getGuesses() != null) {
+
+				if(!difA.isEmpty()){
+					System.out.printf("removing %s from row %d column %d \n" ,difA, cell.getRow().getIndex(),cell.getColumn().getIndex() );
+					cell.getGuesses().removeAll(difA);
+				}
+				if(!difB.isEmpty()){
+					System.out.printf("removing %s from row %d column %d \n" ,difB, cell.getRow().getIndex(),cell.getColumn().getIndex() );
+					cell.getGuesses().removeAll(difB);
+				}
+				if(cell.getGuesses().isEmpty()){
+					System.out.println("WTF");
+				}
+				if(cell.getGuesses().size() == 1){
+					cell.setValue(cell.getGuesses().get(0));
+					System.out.println("found one");
+				}
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Error Occurred", e);
+		}
 	}
 
 	private void clearGuessesFromSmallGroupVertical(Group group, Difs difs) {
 
 		for (int number = 0; number < 7; number += 3) {
-			try {
-				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null) {
-
-					cell.getGuesses().removeAll(difs.dif2);
-					cell.getGuesses().removeAll(difs.dif3);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
-			}
+			clearGuessesCell(group, number, difs.dif2, difs.dif3);
 		}
 
 		for (int number = 3; number < 8; number += 3) {
-			try {
-				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null) {
-					cell.getGuesses().removeAll(difs.dif1);
-					cell.getGuesses().removeAll(difs.dif3);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
-			}
+			clearGuessesCell(group, number, difs.dif1, difs.dif3);
 		}
 
 		for (int number = 6; number < 9; number += 3) {
-			try {
-				Cell cell = group.getGroup().get(number);
-				if(cell.getGuesses() != null) {
-					cell.getGuesses().removeAll(difs.dif1);
-					cell.getGuesses().removeAll(difs.dif2);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error Ocured", e);
-			}
+			clearGuessesCell(group, number, difs.dif1, difs.dif2);
 		}
 
 	}
@@ -260,55 +235,6 @@ public class SudokuAlgorithm3 implements Algorithm {
 		}
 	}
 
-	// private void printDifs(difs){
-	// str = "dif1 : ";
-	// for (var i = difs.dif1.length - 1; i >= 0; i--) {
-	// str += difs.dif1[i];
-	// str += ';'
-	// }
-	// str += " dif2 : ";
-	// for (var i = difs.dif2.length - 1; i >= 0; i--) {
-	// str += difs.dif2[i];
-	// str += ';'
-	// }
-	// str += " dif3 : ";
-	// for (var i = difs.dif3.length - 1; i >= 0; i--) {
-	// str += difs.dif3[i];
-	// str += ';'
-	// }
-	// logger.info(str);
-	//
-	// }
-
-	// private void contains(a, obj) {
-	// for (var i = 0; i < a.length; i++) {
-	// try{
-	// if (a[i] === obj) {
-	// return true;
-	// }
-	//
-	// }catch(Exception e){
-	// logger.info(e);
-	// }
-	//
-	// }
-	// return false;
-	// }
-
-	// private void insert(a, b) {
-	// if(b != null){
-	// if(typeof b == 'number'){
-	// a[a.length] = b;
-	// }else{
-	// for (var i = b.length - 1; i >= 0; i--) {
-	// if(!contains(a,b[i])){
-	// a[a.length] = b[i];
-	// }
-	// }
-	// }
-	// }
-	//
-	// }
 
 	private List<Integer> subtract(Collection<Integer> a, Collection<Integer> b) {
 		List<Integer> c = new ArrayList<>(a);
@@ -351,6 +277,8 @@ public class SudokuAlgorithm3 implements Algorithm {
 
 		printCellValues(sudoku);
 		printCellGuesses(sudoku);
+		sudoku = resetGuesses(sudoku);
+		sudoku = sudokuAlgorithm1.useAlgorithm(sudoku);
 		return sudoku;
 
 	}

@@ -36,10 +36,12 @@ public class SudokuValidator {
 			group.getGroup().parallelStream().forEach(cell->{
 				if(cell.getValue() != 0 && values.contains(cell.getValue())){
 					this.result = false;
+					System.err.printf("Row %d Column %d value %d  failed validation\n", cell.getRow().getIndex(),cell.getColumn().getIndex(), cell.getValue());
 					return;
 				}
 				if(cell.getValue() == 0 && cell.getGuesses().size()==0){
 					this.result = false;
+					System.err.printf("Row %d Column %d value %d failed validation\n", cell.getRow().getIndex(),cell.getColumn().getIndex(), cell.getValue());
 					return;
 				}
 				values.add(cell.getValue());
