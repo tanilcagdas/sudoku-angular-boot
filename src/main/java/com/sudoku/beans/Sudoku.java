@@ -209,6 +209,8 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 				cell.setValue(this.getRowArray().get(i).getGroup().get(j).getValue());
 			}
 		}
+		sudoku.setPuzzleId(puzzleId);
+		sudoku.setPuzzleLevel(puzzleLevel);
 		return sudoku;
 	}
 	
