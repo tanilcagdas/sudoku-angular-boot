@@ -33,6 +33,8 @@ public class SudokuAlgorithm3 implements Algorithm {
     @Autowired
     private BrainIF brain;
 
+    private int maxDepth = 10;
+
     Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
     private void determineWhoHasUniqueGuessInGroupHorizontal(Sudoku sudokuSolution) {
@@ -259,6 +261,11 @@ public class SudokuAlgorithm3 implements Algorithm {
 
     @Override
     public Sudoku useAlgorithm(Sudoku sudoku) {
+        if(sudoku.getDepth()>maxDepth){
+            System.err.println("Max depth have been reached");
+            return sudoku;
+        }
+        sudoku.setDepth(sudoku.getDepth() + 1);
 
         printCellValues(sudoku);
 

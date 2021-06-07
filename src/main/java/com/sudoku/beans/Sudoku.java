@@ -17,6 +17,7 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 	private boolean sudokuHasChanged;
 	private int trial;
 	private boolean sudokuCorrect;
+	private int depth;
 	
 	public Sudoku(){
 			for(int i=0;i<9;i++){
@@ -211,6 +212,8 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 		}
 		sudoku.setPuzzleId(puzzleId);
 		sudoku.setPuzzleLevel(puzzleLevel);
+		sudoku.setDepth(depth);
+		sudoku.setSudokuCorrect(sudokuCorrect);
 		return sudoku;
 	}
 	
@@ -269,10 +272,15 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 		
 	}
 
-
 	public boolean isSudokuCorrect() {
 		return sudokuCorrect;
 	}
 
+	public int getDepth() {
+		return depth;
+	}
 
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
 }
