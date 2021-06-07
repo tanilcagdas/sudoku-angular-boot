@@ -91,10 +91,13 @@ public class BrainImpl implements BrainIF {
 					sudoku.incrementTrial();
 				}
 			}
-			if(sudokuSolution.getHowManyCellsLeft() != 0 && sudoku.getTrial() < 9){
-				sudokuAlgorithm3.useAlgorithm(sudokuSolution);
+			if(sudokuSolution.getHowManyCellsLeft() != 0 /*&& sudoku.getTrial() < 9*/){
+				sudokuSolution = sudokuAlgorithm3.useAlgorithm(sudokuSolution);
 				logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 3");
 				if(!sudokuValidator.validate(sudokuSolution)){
+					return sudokuSolution;
+				}
+				if(sudokuSolution.isSolved()){
 					return sudokuSolution;
 				}
 				sudoku.incrementTrial();
@@ -116,6 +119,7 @@ public class BrainImpl implements BrainIF {
 				logger.log(Level.SEVERE, "Error Occurred", e);
 			}
 		}
+		sudokuValidator.validate(sudokuSolution);
 		return sudokuSolution;
 	}
 
