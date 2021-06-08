@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sudoku.beans.Sudoku;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,14 @@ public class SudokuFileWriter {
         return new File("sudokusolver/sudoku_" + sudoku.getPuzzleLevel() + "_" + sudoku.getPuzzleId() + ".json");
     }
 
+    public static void convertUnsolvedToJson() throws IOException {
+        List<Sudoku> sudokus = NotSolvedWriter.readANonSolvedSudoku();
+        for (Sudoku sudoku : sudokus) {
+            write(sudoku);
+        }
+
+    }
+
     public static void update(Sudoku sudoku) throws IOException {
         Map sudokuMap = OBJECT_MAPPER.readValue(getFileName(sudoku), Map.class);
         List<List<Integer>> solution = convertSudokuToList(sudoku);
@@ -51,8 +60,25 @@ public class SudokuFileWriter {
     private static void createFolder() {
         String outputFolder = "sudokusolver";
         File folder = new File(outputFolder);
-        if(!folder.exists()){
+        if (!folder.exists()) {
             folder.mkdir();
         }
+    }
+
+    public static Sudoku load(long puzzleId, int puzzleLevel) throws IOException {
+
+        Sudoku sudoku = new Sudoku();
+        sudoku.setPuzzleId(puzzleId);
+        sudoku.setPuzzleLevel(puzzleLevel);
+        Map sudokuMap = OBJECT_MAPPER.readValue(getFileName(sudoku), Map.class);
+        List<List<Integer>> sudoku1 = (List<List<Integer>>) sudokuMap.get("sudoku");
+        for (int i = 0; i < sudoku1.size(); i++) {
+            List<Integer> row = sudoku1.get(i);
+            for (int j = 0; j < row.size(); j++) {
+                Integer cell = row.get(j);
+                sudoku.getRowArray().get(i).getGroup().get(j).setValue(cell);
+            }
+        }
+        return sudoku;
     }
 }

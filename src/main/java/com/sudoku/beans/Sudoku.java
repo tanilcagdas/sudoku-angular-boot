@@ -1,7 +1,10 @@
 package com.sudoku.beans;
 
+import com.sudoku.service.SudokuValidator;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class Sudoku implements Cloneable, Comparable<Sudoku> {
@@ -74,7 +77,14 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 
 
 	public int getHowManyCellsLeft() {
+		countHowManyCellsLeft();
 		return HowManyCellsLeft;
+	}
+
+	private void countHowManyCellsLeft() {
+		AtomicInteger count = new AtomicInteger(0);
+		rowArray.stream().map(row -> row.getGroup().stream().filter(cell -> cell.getValue() == 0 ).count()).forEach(ct-> count.set(count.get() + ct.intValue()));
+		HowManyCellsLeft = count.get();
 	}
 
 
@@ -283,4 +293,8 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
+
+    public boolean validate() {
+		return SudokuValidator.validate(this);
+    }
 }

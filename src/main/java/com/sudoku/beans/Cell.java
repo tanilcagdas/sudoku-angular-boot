@@ -62,18 +62,44 @@ public class Cell extends Observable implements Observer {
 		if (this.value == value) {
 			return;
 		}
-		this.value = value;
-		setGuesses(null);
-		setFound((value == 0) ? false : true);
-		setChanged();
-		getRow().getSudoku().setHowManyCellsLeft(
-				getRow().getSudoku().getHowManyCellsLeft() - 1);
-		logger.info("Cell with coordinates : " + getRow().getIndex()
-				+ "," + getColumn().getIndex()
+//		this.value = value;
+//		setGuesses(null);
+//		setFound(value != 0);
+		if(backupAndValidateThenApply(value)){
+			setChanged();
+//		getRow().getSudoku().validate();
+//		getRow().getSudoku().setHowManyCellsLeft(
+//				getRow().getSudoku().getHowManyCellsLeft() - 1);
+			logger.info("Cell with coordinates : " + getRow().getIndex()
+					+ "," + getColumn().getIndex()
 //				+ " value set by "
 //				+ Thread.currentThread().getStackTrace()[2].toString()
-				+ " to : " + value);
-		notifyObservers(this);
+					+ " to : " + value);
+			notifyObservers(this);
+		}
+
+	}
+
+	private boolean backupAndValidateThenApply(int value) {
+
+		Cell temp = new Cell();
+		temp.value = this.value;
+		temp.guesses = this.guesses;
+		this.value = value;
+		setGuesses(null);
+		setFound(value != 0);
+		if(!getRow().getSudoku().validate()){
+			rollBack(temp);
+			return false;
+		}
+		return true;
+	}
+
+	private void rollBack(Cell temp) {
+		System.err.println("Rolling back !!");
+		this.value = temp.value;
+		this.guesses = temp.guesses;
+		setFound(false);
 	}
 
 	public boolean isFound() {
@@ -81,10 +107,10 @@ public class Cell extends Observable implements Observer {
 	}
 
 	public void setFound(boolean found) {
-		if (getValue() == 0 && found == false) {
-			this.found = found;
-		} else if (getValue() != 0 && found == true) {
-			this.found = found;
+		if (getValue() == 0 && !found) {
+			this.found = false;
+		} else if (getValue() != 0 && found) {
+			this.found = true;
 		} else {
 			logger.info("trying to set cell found to " + found
 					+ " but value is " + getValue());

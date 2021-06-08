@@ -2,6 +2,7 @@ package com.sudoku.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.stereotype.Service;
 
@@ -11,45 +12,52 @@ import com.sudoku.beans.Sudoku;
 @Service
 public class SudokuValidator {
 	
-	boolean result;
 
-	public boolean validate(Sudoku sudoku){
+	public static boolean validate(Sudoku sudoku){
 		
-		result = true;
-		validatorHelper(sudoku.getColumnArray());
+		boolean result = true;
+		result = validatorHelper(sudoku.getColumnArray());
 		if(result){
-			validatorHelper(sudoku.getRowArray());
+			result = validatorHelper(sudoku.getRowArray());
 		}
 		if(result){
-			validatorHelper(sudoku.getThreeByThreeArray());
+			result = validatorHelper(sudoku.getThreeByThreeArray());
 		}
-		
-		
-		
+		if(result){
+			System.out.println("sudoku is valid");
+		} else {
+			System.err.println("Sudoku is not valid");
+		}
 		return result;
 		
 	}
 
-	private void validatorHelper(List<? extends Group> groupList) {
+	private static boolean validatorHelper(List<? extends Group> groupList) {
+		AtomicBoolean result = new AtomicBoolean(true);
 		groupList.forEach(group->{
 			List<Integer> values = new ArrayList<>();
 			group.getGroup().parallelStream().forEach(cell->{
 				if(cell.getValue() != 0 && values.contains(cell.getValue())){
-					this.result = false;
+					result.set(false);
 					System.err.printf("Row %d Column %d value %d  failed validation\n", cell.getRow().getIndex(),cell.getColumn().getIndex(), cell.getValue());
 					return;
 				}
 				if(cell.getValue() == 0 && cell.getGuesses().size()==0){
-					this.result = false;
+					result.set(false);
 					System.err.printf("Row %d Column %d value %d failed validation\n", cell.getRow().getIndex(),cell.getColumn().getIndex(), cell.getValue());
+//					cell.setGuesses(new ArrayList<>(BrainImpl.DEFAULT_GUESSES));
 					return;
 				}
 				values.add(cell.getValue());
 			});
-			if(!result){
+			if(!result.get()){
 				return;
 			}
 		});
+//		if(!result.get()){
+//			throw new RuntimeException("Sudoku is not valid");
+//		}
+		return result.get();
 	}
 	
 }

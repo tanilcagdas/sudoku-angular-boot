@@ -23,9 +23,6 @@ public class BrainImpl implements BrainIF {
 	private NotSolvedWriter notSolvedWriter;
 
 	@Autowired
-	private SudokuValidator sudokuValidator;
-
-	@Autowired
 	@Qualifier("SudokuAlgorithm1")
 	private Algorithm sudokuAlgorithm1;
 
@@ -55,9 +52,12 @@ public class BrainImpl implements BrainIF {
 	}
 
 	public Sudoku solveSudoku(Sudoku sudoku) {
-		Sudoku sudokuSolution = new Sudoku();
-		sudokuSolution = sudoku.copy();
+		System.out.println("Solve Sudoku");
+		sudoku.validate();
+		Sudoku sudokuSolution = sudoku.copy();
 		sudokuSolution.setSudokuHasChanged(true);
+		logger.info("Copied Sudoku");
+		sudoku.validate();
 		try {
 			evaluateGuesses(sudokuSolution);
 		} catch (Exception e) {
@@ -74,8 +74,8 @@ public class BrainImpl implements BrainIF {
 					if(sudokuSolution.getHowManyCellsLeft() != 0){
 						sudokuAlgorithm1.useAlgorithm(sudokuSolution);
 						sudoku.incrementTrial();
-						logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 1");
-						if(!sudokuValidator.validate(sudokuSolution)){
+						logger.info(sudokuSolution.validate()+ " after alg 1");
+						if(!sudokuSolution.validate()){
 							logger.log(Level.SEVERE, "Validation Failed");
 							return sudokuSolution;
 						}
@@ -84,8 +84,8 @@ public class BrainImpl implements BrainIF {
 				}
 				if(sudokuSolution.getHowManyCellsLeft() != 0){
 					sudokuAlgorithm2.useAlgorithm(sudokuSolution);
-					logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 2");
-					if(!sudokuValidator.validate(sudokuSolution)){
+					logger.info(sudokuSolution.validate()+ " after alg 2");
+					if(!sudokuSolution.validate()){
 						return sudokuSolution;
 					}
 					sudoku.incrementTrial();
@@ -93,8 +93,8 @@ public class BrainImpl implements BrainIF {
 			}
 			if(sudokuSolution.getHowManyCellsLeft() != 0 /*&& sudoku.getTrial() < 9*/){
 				sudokuSolution = sudokuAlgorithm3.useAlgorithm(sudokuSolution);
-				logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 3");
-				if(!sudokuValidator.validate(sudokuSolution)){
+				logger.info(sudokuSolution.validate()+ " after alg 3");
+				if(!sudokuSolution.validate()){
 					return sudokuSolution;
 				}
 				if(sudokuSolution.isSolved()){
@@ -105,8 +105,8 @@ public class BrainImpl implements BrainIF {
 		}
 //		if(sudokuSolution.getHowManyCellsLeft() != 0){
 //			sudokuSolution = sudokuAlgorithm4.useAlgorithm(sudokuSolution);
-//			logger.info(sudokuValidator.validate(sudokuSolution) + " after alg 4");
-//			if(!sudokuValidator.validate(sudokuSolution)){
+//			logger.info(sudokuSolution.validate()+ " after alg 4");
+//			if(!sudokuSolution.validate()){
 //				return sudokuSolution;
 //			}
 //			sudoku.incrementTrial();
@@ -119,7 +119,7 @@ public class BrainImpl implements BrainIF {
 				logger.log(Level.SEVERE, "Error Occurred", e);
 			}
 		}
-		sudokuValidator.validate(sudokuSolution);
+		sudokuSolution.validate();
 		return sudokuSolution;
 	}
 

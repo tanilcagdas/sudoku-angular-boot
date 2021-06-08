@@ -10,10 +10,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -65,12 +64,17 @@ public class NotSolvedWriter {
         }
     }
 
-    public Sudoku readANonSolvedSudoku() throws FileNotFoundException {
-        Sudoku sudoku = new Sudoku();
+    public static List<Sudoku> readANonSolvedSudoku() throws FileNotFoundException {
+        List<Sudoku> sudokuList = new ArrayList<>();
         Collection<File> all = getAllFileNames();
-        Object[] strArray = all.toArray();
-        if (strArray.length != 0) {
-            File file = (File) strArray[0];
+        Collection<File> unSolvedSudokus = all.stream().filter(file -> file.getName().contains("unSolvedSudoku")).collect(Collectors.toList());
+        Object[] strArray = unSolvedSudokus.toArray();
+
+        for (int index = 0; index < strArray.length; index++) {
+            Sudoku sudoku = new Sudoku();
+//        }
+//        if (strArray.length != 0) {
+            File file = (File) strArray[index];
             file.toString();
             String inputFile = file.toString();
             Reader reader = new InputStreamReader(
@@ -88,21 +92,29 @@ public class NotSolvedWriter {
             }
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
-                    int value = Character.getNumericValue(((str.split("" + i
-                            + j + " : "))[1].charAt(0)));
+                    int value;
+                    try{
+                        value = Character.getNumericValue(((str.split("" + i + j + " : "))[1].charAt(0)));
+                    } catch (Exception e) {
+                        value = 0;
+                    }
                     // logger.info(value);
                     sudoku.getRowArray().get(i).getGroup().get(j)
                             .setValue(value);
                 }
             }
+            String[] split = file.getName().replace("unSolvedSudoku_", "").split("_");
+            sudoku.setPuzzleId(Long.parseLong(split[0]));
+            sudoku.setPuzzleLevel(Integer.parseInt(split[1]));
+            sudokuList.add(sudoku);
         }
-        return sudoku;
+        return sudokuList;
     }
 
 
-    public Collection<File> getAllFileNames() {
-        Collection<File> all = new ArrayList<File>();
-        addTree(new File("D:/springsource/sts-3.4.0.RELEASE/sudokusolver"), all);
+    public static Collection<File> getAllFileNames() {
+        Collection<File> all = new ArrayList<>();
+        addTree(new File("sudokusolver"), all);
         return all;
     }
 

@@ -96,8 +96,10 @@ public class SudokuAlgorithm3 implements Algorithm {
             if (difs.dif1.size() > 0 || difs.dif2.size() > 0 || difs.dif3.size() > 0) {
 //				BrainImpl.BLUE = "green";
 //				BrainImpl.RED = "orange";
-                System.out.println("Going to clear based on diffs from vertical results" + difs);
+                System.out.println("Going to clear based on diffs from vertical results " + difs);
+                sudokuSolution.validate();
                 clearGuessesFromSmallGroupVertical(sudokuSolution.getThreeByThreeArray().get(i), difs);
+                sudokuSolution.validate();
                 sudokuSolution.setSudokuHasChanged(true);
                 sudokuSolution = cleanUp(sudokuSolution);
             }
@@ -271,8 +273,11 @@ public class SudokuAlgorithm3 implements Algorithm {
 
         if (sudoku.getHowManyCellsLeft() != 0)
             try {
+                sudoku.validate();
                 determineWhoHasUniqueGuessInGroupHorizontal(sudoku);
+                sudoku.validate();
                 determineWhoHasUniqueGuessInGroupVertical(sudoku);
+                sudoku.validate();
             } catch (Exception e) {
                 System.err.println(e);
                 return sudoku;
