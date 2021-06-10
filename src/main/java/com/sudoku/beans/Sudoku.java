@@ -21,7 +21,8 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 	private int trial;
 	private boolean sudokuCorrect;
 	private int depth;
-	
+	private boolean algorithm3Applied;
+
 	public Sudoku(){
 			for(int i=0;i<9;i++){
 				rowArray.add( new Row(this,i)); 
@@ -218,6 +219,7 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
 			for (int j =0; j<9; j++) {
 				Cell cell = row.getGroup().get(j);
 				cell.setValue(this.getRowArray().get(i).getGroup().get(j).getValue());
+				cell.setColor(this.getRowArray().get(i).getGroup().get(j).getColor());
 			}
 		}
 		sudoku.setPuzzleId(puzzleId);
@@ -297,4 +299,12 @@ public class Sudoku implements Cloneable, Comparable<Sudoku> {
     public boolean validate() {
 		return SudokuValidator.validate(this);
     }
+
+    public boolean isAlgorithm3Applied() {
+		return algorithm3Applied;
+    }
+
+	public void setAlgorithm3Applied(boolean algorithm3Applied) {
+		this.algorithm3Applied = algorithm3Applied;
+	}
 }

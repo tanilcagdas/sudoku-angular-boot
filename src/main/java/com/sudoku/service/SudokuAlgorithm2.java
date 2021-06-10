@@ -117,7 +117,11 @@ sudokuSolution.getThreeByThreeArray().forEach(group -> determineWhoHasUniqueGues
 							}
 						}
 						cell.setValue(number);
-						cell.setColor(BrainImpl.BLUE);
+						if(cell.getRow().getSudoku().isAlgorithm3Applied()){
+							cell.setColor("Green");
+						}else{
+							cell.setColor(BrainImpl.BLUE);
+						}
 						group.getSudoku().setSudokuHasChanged(true);
 						break;
 					}

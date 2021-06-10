@@ -28,7 +28,7 @@ public class SudokuFileWriter {
 
     }
 
-    private static List<List<Integer>> convertSudokuToList(Sudoku sudoku) {
+    public static List<List<Integer>> convertSudokuToList(Sudoku sudoku) {
         List<List<Integer>> rowList = new ArrayList();
         sudoku.getRowArray().forEach(row -> {
             List<Integer> cellList = new ArrayList<>();

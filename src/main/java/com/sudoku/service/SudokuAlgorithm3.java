@@ -65,25 +65,16 @@ public class SudokuAlgorithm3 implements Algorithm {
                 continue;
             }
             if (difs.dif1.size() > 0 || difs.dif2.size() > 0 || difs.dif3.size() > 0) {
-//				BrainImpl.BLUE = "green";
-//				BrainImpl.RED = "orange";
+				BrainImpl.BLUE = "green";
+				BrainImpl.RED = "orange";
                 System.out.println("Going to clear based on diffs " + difs);
                 clearGuessesFromSmallGroup(sudokuSolution.getThreeByThreeArray().get(i), difs);
                 sudokuSolution.setSudokuHasChanged(true);
-                sudokuSolution = cleanUp(sudokuSolution);
             }
 
         }
     }
 
-    private Sudoku cleanUp(Sudoku sudokuSolution) {
-//		sudokuSolution = runAlgorithm1and2(sudokuSolution);
-//		sudokuSolution = resetGuesses(sudokuSolution);
-//		printCellGuesses(sudokuSolution);
-//		sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
-//		printCellGuesses(sudokuSolution);
-        return sudokuSolution;
-    }
 
     private void clearGuesseswithdifsVertical(Sudoku sudokuSolution, Difs difs, int index) {
 
@@ -94,14 +85,13 @@ public class SudokuAlgorithm3 implements Algorithm {
                 continue;
             }
             if (difs.dif1.size() > 0 || difs.dif2.size() > 0 || difs.dif3.size() > 0) {
-//				BrainImpl.BLUE = "green";
-//				BrainImpl.RED = "orange";
+				BrainImpl.BLUE = "green";
+				BrainImpl.RED = "orange";
                 System.out.println("Going to clear based on diffs from vertical results " + difs);
                 sudokuSolution.validate();
                 clearGuessesFromSmallGroupVertical(sudokuSolution.getThreeByThreeArray().get(i), difs);
                 sudokuSolution.validate();
                 sudokuSolution.setSudokuHasChanged(true);
-                sudokuSolution = cleanUp(sudokuSolution);
             }
 
         }
@@ -110,20 +100,20 @@ public class SudokuAlgorithm3 implements Algorithm {
     private void clearGuessesFromSmallGroup(Group group, Difs difs) {
 
         for (int number = 0; number < 3; number++) {
-            clearGuessesCell(group, number, difs.dif2, difs.dif3);
+            clearGuessesCell(group, number, difs.dif1);
         }
 
         for (int number = 3; number < 6; number++) {
-            clearGuessesCell(group, number, difs.dif1, difs.dif3);
+            clearGuessesCell(group, number, difs.dif2);
         }
 
         for (int number = 6; number < 9; number++) {
-            clearGuessesCell(group, number, difs.dif1, difs.dif2);
+            clearGuessesCell(group, number, difs.dif3);
         }
 
     }
 
-    private void clearGuessesCell(Group group, int number, List<Integer> difA, List<Integer> difB) {
+    private void clearGuessesCell(Group group, int number, List<Integer> difA) {
         try {
             Cell cell = group.getGroup().get(number);
             if (cell.getGuesses() != null) {
@@ -131,10 +121,6 @@ public class SudokuAlgorithm3 implements Algorithm {
                 if (!difA.isEmpty()) {
                     System.out.printf("removing %s from row %d column %d \n", difA, cell.getRow().getIndex(), cell.getColumn().getIndex());
                     cell.getGuesses().removeAll(difA);
-                }
-                if (!difB.isEmpty()) {
-                    System.out.printf("removing %s from row %d column %d \n", difB, cell.getRow().getIndex(), cell.getColumn().getIndex());
-                    cell.getGuesses().removeAll(difB);
                 }
                 if (cell.getGuesses().isEmpty()) {
                     System.out.println("WTF");
@@ -152,15 +138,15 @@ public class SudokuAlgorithm3 implements Algorithm {
     private void clearGuessesFromSmallGroupVertical(Group group, Difs difs) {
 
         for (int number = 0; number < 7; number += 3) {
-            clearGuessesCell(group, number, difs.dif2, difs.dif3);
+            clearGuessesCell(group, number, difs.dif1);
         }
 
         for (int number = 3; number < 8; number += 3) {
-            clearGuessesCell(group, number, difs.dif1, difs.dif3);
+            clearGuessesCell(group, number, difs.dif2);
         }
 
         for (int number = 6; number < 9; number += 3) {
-            clearGuessesCell(group, number, difs.dif1, difs.dif2);
+            clearGuessesCell(group, number, difs.dif3);
         }
 
     }
@@ -267,6 +253,8 @@ public class SudokuAlgorithm3 implements Algorithm {
             System.err.println("Max depth have been reached");
             return sudoku;
         }
+
+        sudoku.setAlgorithm3Applied(true);
         sudoku.setDepth(sudoku.getDepth() + 1);
 
         printCellValues(sudoku);
