@@ -1,6 +1,7 @@
 package com.sudoku.beans;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
@@ -16,7 +17,7 @@ public class Cell extends Observable implements Observer {
 	private Group threeByThreeSquare;
 	private int value;
 	private boolean found;
-	private ArrayList<Integer> guesses;
+	private List<Integer> guesses;
 	private String color = "darkgray";
 
 	private static ArrayList<Integer> DEFAULT_GUESSES = new ArrayList<Integer>();
@@ -29,6 +30,11 @@ public class Cell extends Observable implements Observer {
 	}
 
 	public Cell() {}
+	//For testing
+	public Cell(int value, List<Integer> guesses) {
+		this.value = value;
+		this.guesses = guesses;
+	}
 	public Cell(Group group) {
 		if (group instanceof Row) {
 			this.setRow(group);
@@ -117,11 +123,11 @@ public class Cell extends Observable implements Observer {
 		}
 	}
 
-	public ArrayList<Integer> getGuesses() {
+	public List<Integer> getGuesses() {
 		return guesses;
 	}
 
-	public void setGuesses(ArrayList<Integer> guesses) {
+	public void setGuesses(List<Integer> guesses) {
 		this.guesses = guesses;
 	}
 

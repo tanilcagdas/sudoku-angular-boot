@@ -43,36 +43,23 @@ public class Algorithm3Test {
     }
 
     @Test
-    public void solveLevel4FailingTest() throws IOException {
+    public void solveLevel4Test() throws IOException {
         Sudoku sudoku = SudokuFileWriter.load(5978709421l, 4);
         sudoku = brain.solveSudoku(sudoku);
         List<List<Integer>> lists = SudokuFileWriter.convertSudokuToList(sudoku);
         System.out.println(lists);
         System.out.println(sudoku);
         Assert.assertEquals("[" +
-                "[0, 4, 0, 0, 0, 3, 9, 0, 0], " +
-                "[2, 0, 0, 0, 0, 1, 7, 0, 0], " +
-                "[0, 0, 3, 0, 8, 0, 6, 0, 0], " +
-                "[6, 2, 0, 0, 0, 4, 0, 9, 0], " +
-                "[0, 0, 4, 0, 0, 0, 2, 6, 0], " +
-                "[0, 8, 0, 9, 0, 0, 0, 4, 5], " +
-                "[0, 0, 2, 0, 1, 0, 4, 7, 9], " +
-                "[0, 1, 5, 7, 0, 0, 0, 0, 6], " +
-                "[0, 0, 9, 3, 0, 0, 5, 1, 0]]",lists.toString());
+                "[5, 4, 6, 2, 7, 3, 9, 8, 1], " +
+                "[2, 9, 8, 4, 6, 1, 7, 5, 3], " +
+                "[1, 7, 3, 5, 8, 9, 6, 2, 4], " +
+                "[6, 2, 1, 8, 5, 4, 3, 9, 7], " +
+                "[9, 5, 4, 1, 3, 7, 2, 6, 8], " +
+                "[3, 8, 7, 9, 2, 6, 1, 4, 5], " +
+                "[8, 3, 2, 6, 1, 5, 4, 7, 9], " +
+                "[4, 1, 5, 7, 9, 2, 8, 3, 6], " +
+                "[7, 6, 9, 3, 4, 8, 5, 1, 2]]",lists.toString());
 
     }
-
-//    @Test
-//    public void solveLevel4FailingTestA() throws IOException {
-//
-//        List<List<Integer>> lists  = new ObjectMapper().readValue("[[0, 4, 0, 0, 0, 3, 9, 0, 1], [2, 0, 3, 0, 8, 0, 6, 0, 0], [1, 0, 3, 0, 8, 0, 6, 0, 0], [6, 2, 0, 0, 0, 4, 3, 9, 7], [0, 0, 4, 0, 0, 0, 2, 6, 8], [0, 8, 0, 9, 0, 0, 1, 4, 5], [0, 0, 2, 0, 1, 5, 4, 7, 9], [0, 1, 5, 7, 0, 0, 8, 0, 6], [0, 0, 9, 3, 0, 0, 5, 1, 0]]", List.class);
-//        Sudoku sudoku = SudokuFileWriter.loadFromLists(new Sudoku(), lists);
-//        sudoku = brain.solveSudoku(sudoku);
-//        List<List<Integer>> lists1 = SudokuFileWriter.convertSudokuToList(sudoku);
-////        Assert.assertEquals("[[0, 4, 0, 0, 0, 3, 9, 0, 1], [2, 0, 3, 0, 8, 0, 6, 0, 0], [1, 0, 3, 0, 8, 0, 6, 0, 0], [6, 2, 0, 0, 0, 4, 3, 9, 7], [0, 0, 4, 0, 0, 0, 2, 6, 8], [0, 8, 0, 9, 0, 0, 1, 4, 5], [0, 0, 2, 0, 1, 5, 4, 7, 9], [0, 1, 5, 7, 0, 0, 8, 0, 6], [0, 0, 9, 3, 0, 0, 5, 1, 0]]",lists.toString());
-//        System.out.println(lists1);
-//        System.out.println(sudoku);
-//
-//    }
 
 }

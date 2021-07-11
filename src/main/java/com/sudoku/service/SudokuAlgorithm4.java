@@ -1,9 +1,8 @@
 package com.sudoku.service;
 
+import java.util.*;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.sudoku.beans.Cell;
@@ -11,90 +10,67 @@ import com.sudoku.beans.Sudoku;
 
 @Service("SudokuAlgorithm4")
 public class SudokuAlgorithm4 implements Algorithm {
-	
-	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-	
-	@Autowired
-	private SudokuValidator sudokuValidator;
 
-	@Autowired
-	@Qualifier("SudokuAlgorithm1")
-	private Algorithm sudokuAlgorithm1;
+    Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
-	@Autowired
-	@Qualifier("SudokuAlgorithm2")
-	private Algorithm sudokuAlgorithm2;
+    public static Map<List<Integer>, List<Integer>> miniGroupIndexes = new HashMap() {{
+        put(Arrays.asList(0, 1, 2), Arrays.asList(3, 4, 5, 6, 7, 8));
+        put(Arrays.asList(3, 4, 5), Arrays.asList(0, 1, 2, 6, 7, 8));
+        put(Arrays.asList(6, 7, 8), Arrays.asList(0, 1, 2, 3, 4, 5));
 
+        put(Arrays.asList(0, 3, 6), Arrays.asList(1, 2, 4, 5, 7, 8));
+        put(Arrays.asList(1, 4, 7), Arrays.asList(0, 2, 3, 5, 6, 8));
+        put(Arrays.asList(2, 5, 8), Arrays.asList(0, 1, 3, 4, 6, 7));
+    }};
+    private boolean modified;
 
-	Cell selectedCell;
+    @Override
+    public Sudoku useAlgorithm(Sudoku sudoku) {
+        modified = false;
+        logger.info("Using alg 4");
+        sudoku.getThreeByThreeArray().forEach(threeByThreeSquare -> {
+            miniGroupIndexes.forEach((k, v) -> {
+                ArrayList<Cell> cells = twoGuessesForTwoCellsInSmallGroupHelper(threeByThreeSquare.getGroup(), k, v);
+                threeByThreeSquare.setGroup(cells);
+            });
+        });
 
-	@Override
-	public Sudoku useAlgorithm(Sudoku sudoku) {
+        sudoku.setSudokuHasChanged(modified);
+        return sudoku;
+    }
 
-		if (sudoku.getHowManyCellsLeft() != 0)
-			try {
-					
-				Sudoku copy = null;
-				for (int i = 0; i < 10; i++) {
-					 copy = sudoku.copy();
-					selectedCell = null;
-				copy.getColumnArray().forEach(col->{
-					col.getGroup().forEach(cell->{
-						if(!cell.isFound() && cell.getGuesses().size()>0){
-							selectedCell = cell;
-							return;
-						}
-					});
-					if(selectedCell != null){
-						return;
-					}
-				});
-				if(selectedCell == null || selectedCell.getGuesses().size()<=i){
-					if(sudokuValidator.validate(copy) && sudoku.getHowManyCellsLeft() != copy.getHowManyCellsLeft()){
-						sudoku = copy;
-					}else{
-						return sudoku;
-					}
-					
-					break;
-				}
-				selectedCell.setValue(selectedCell.getGuesses().get(i));
-				
-				while (copy.isSudokuHasChanged()) {
-					while (copy.isSudokuHasChanged()) {
-						if(copy.getHowManyCellsLeft() != 0){
-							sudokuAlgorithm1.useAlgorithm(copy);
-							copy.incrementTrial();
-							logger.info(sudokuValidator.validate(copy) + " after alg 1"+ selectedCell);
-						}
-						
-					}
-					if(copy.getHowManyCellsLeft() != 0){
-						sudokuAlgorithm2.useAlgorithm(copy);
-						logger.info(sudokuValidator.validate(copy) + " after alg 2" + selectedCell);
-						copy.incrementTrial();
-					}
-				}
-				logger.info(copy.getHowManyCellsLeft() + "");
-			}
-				if(sudokuValidator.validate(copy)){
-					useAlgorithm(copy);
-				}
-				
-	
-			} catch (Exception e) {
-				System.err.println(e);
-				return sudoku;
-			}
-		
-		if (sudoku.getHowManyCellsLeft() == 0) {
-			sudoku.setSolved(true);
-			sudoku.setSudokuHasChanged(false);
-			logger.info("Sudoku is solved");
-			return sudoku;
-		}
-		return sudoku;
-
-	}
+    protected ArrayList<Cell> twoGuessesForTwoCellsInSmallGroupHelper(ArrayList<Cell> group, List<Integer> check, List<Integer> modify) {
+        List<Integer> uniqueDoubleGuesses = new ArrayList<>();
+        int occurrence = 0;
+        for (Integer i : check) {
+            if (uniqueDoubleGuesses.isEmpty() && group.get(i).getGuesses() != null && group.get(i).getGuesses().size() == 2) {
+                uniqueDoubleGuesses = group.get(i).getGuesses();
+                occurrence++;
+            } else if (uniqueDoubleGuesses.size() == 2 && group.get(i).getGuesses() != null && group.get(i).getGuesses().size() == 2) {
+                int match = 0;
+                for (Integer guess : group.get(i).getGuesses()) {
+                    if (uniqueDoubleGuesses.contains(guess)) {
+                        match++;
+                    }
+                }
+                if (match == 2) {
+                    occurrence++;
+                }
+            }
+        }
+        if (occurrence == 2) {
+            for (Integer i : modify) {
+                if(group.get(i).getGuesses() != null){
+                    modified = true;
+                    List<Integer> integers = new ArrayList<>(group.get(i).getGuesses());
+                    for (Integer uniqueDoubleGuess : uniqueDoubleGuesses) {
+                        integers.remove(uniqueDoubleGuess);
+                    }
+                    group.get(i).setGuesses(integers);
+                }
+            }
+        }
+        return group;
+    }
 }
 

@@ -280,9 +280,9 @@ public class SudokuAlgorithm3 implements Algorithm {
 
         printCellValues(sudoku);
         printCellGuesses(sudoku);
-        sudoku = resetGuesses(sudoku);
+//        sudoku = resetGuesses(sudoku);
 //        sudoku = sudokuAlgorithm1.useAlgorithm(sudoku);
-        sudoku = brain.solveSudoku(sudoku);
+//        sudoku = brain.solveSudoku(sudoku);
         return sudoku;
 
     }

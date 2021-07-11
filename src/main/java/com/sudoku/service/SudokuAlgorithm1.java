@@ -2,6 +2,7 @@ package com.sudoku.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +69,7 @@ public class SudokuAlgorithm1 implements Algorithm {
 			for (int foundValues : foundValuesInGroup) {
 				for (int Groupidx = 0; Groupidx < 9; Groupidx++) {
 					for (int gssidx = 0; gssidx < 9; gssidx++) {
-						ArrayList<Integer> Guesses = null;
+						List<Integer> Guesses = null;
 						try {
 							Guesses = group.getGroup().get(Groupidx).getGuesses();
 						} catch (Exception e) {
