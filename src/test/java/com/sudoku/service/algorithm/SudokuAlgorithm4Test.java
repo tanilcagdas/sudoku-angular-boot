@@ -1,4 +1,4 @@
-package com.sudoku.service;
+package com.sudoku.service.algorithm;
 
 import com.sudoku.beans.Cell;
 import junit.framework.TestCase;

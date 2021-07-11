@@ -1,8 +1,9 @@
-package com.sudoku.service;
+package com.sudoku.service.algorithm;
 
 import java.util.*;
 import java.util.logging.Logger;
 
+import com.sudoku.service.Algorithm;
 import org.springframework.stereotype.Service;
 
 import com.sudoku.beans.Cell;
@@ -27,7 +28,6 @@ public class SudokuAlgorithm4 implements Algorithm {
     @Override
     public Sudoku useAlgorithm(Sudoku sudoku) {
         modified = false;
-        logger.info("Using alg 4");
         sudoku.getThreeByThreeArray().forEach(threeByThreeSquare -> {
             miniGroupIndexes.forEach((k, v) -> {
                 ArrayList<Cell> cells = twoGuessesForTwoCellsInSmallGroupHelper(threeByThreeSquare.getGroup(), k, v);
@@ -36,7 +36,7 @@ public class SudokuAlgorithm4 implements Algorithm {
         });
 
         sudoku.setSudokuHasChanged(modified);
-        return sudoku;
+        return AlgorithmUtil.after(sudoku, this.getClass());
     }
 
     protected ArrayList<Cell> twoGuessesForTwoCellsInSmallGroupHelper(ArrayList<Cell> group, List<Integer> check, List<Integer> modify) {

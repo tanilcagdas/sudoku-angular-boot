@@ -1,7 +1,9 @@
-package com.sudoku.service;
+package com.sudoku.service.algorithm;
 
 import com.sudoku.beans.Cell;
 import com.sudoku.beans.Sudoku;
+import com.sudoku.service.Algorithm;
+import com.sudoku.service.SudokuValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

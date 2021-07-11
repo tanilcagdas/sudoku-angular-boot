@@ -1,20 +1,20 @@
 package com.sudoku.service;
 
+import com.sudoku.beans.Cell;
+import com.sudoku.beans.Row;
+import com.sudoku.beans.Sudoku;
+import com.sudoku.util.SudokuUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import com.sudoku.beans.Cell;
-import com.sudoku.beans.Row;
-import com.sudoku.beans.Sudoku;
-import com.sudoku.util.SudokuUtil;
 
 @Service
 public class BrainImpl implements BrainIF {
@@ -38,7 +38,7 @@ public class BrainImpl implements BrainIF {
     @Qualifier("SudokuAlgorithm4")
     private Algorithm sudokuAlgorithm4;
 
-    Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+    Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public static String RED = "red";
     public static String BLUE = "blue";
@@ -53,7 +53,6 @@ public class BrainImpl implements BrainIF {
     }
 
     public Sudoku solveSudoku(Sudoku sudoku) {
-        System.out.println("Solve Sudoku");
         sudoku.validate();
         Sudoku sudokuSolution = sudoku.copy();
         sudokuSolution.setSudokuHasChanged(true);
@@ -62,73 +61,43 @@ public class BrainImpl implements BrainIF {
         try {
             evaluateGuesses(sudokuSolution);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error Occurred", e);
+            logger.error("Error occurred while evaluating guesses", e);
         }
-        // Solve the f.cking sudoku
 
         // Check if the sudoku has changed
         sudoku.setTrial(1);
-        while (sudokuSolution.isSudokuHasChanged()) {
-            while (sudokuSolution.isSudokuHasChanged()) {
-                while (sudokuSolution.isSudokuHasChanged()) {
-                    while (sudokuSolution.isSudokuHasChanged()) {
-                        if (sudokuSolution.getHowManyCellsLeft() != 0) {
-                            sudokuAlgorithm1.useAlgorithm(sudokuSolution);
-                            sudoku.incrementTrial();
-                            logger.info(sudokuSolution.validate() + " after alg 1");
-                            if (!sudokuSolution.validate()) {
-                                logger.log(Level.SEVERE, "Validation Failed");
-                                return sudokuSolution;
-                            }
-                        }
-
+        while (algorithmNeeded(sudokuSolution)) {
+            while (algorithmNeeded(sudokuSolution)) {
+                while (algorithmNeeded(sudokuSolution)) {
+                    while (algorithmNeeded(sudokuSolution)) {
+                        sudokuSolution = sudokuAlgorithm1.useAlgorithm(sudokuSolution);
                     }
-                    if (sudokuSolution.getHowManyCellsLeft() != 0) {
-                        sudokuAlgorithm2.useAlgorithm(sudokuSolution);
-                        logger.info(sudokuSolution.validate() + " after alg 2");
-                        if (!sudokuSolution.validate()) {
-                            return sudokuSolution;
-                        }
-                        sudoku.incrementTrial();
-                    }
+                    sudokuSolution = sudokuAlgorithm2.useAlgorithm(sudokuSolution);
                 }
-                if (sudokuSolution.getHowManyCellsLeft() != 0 /*&& sudoku.getTrial() < 9*/) {
-                    sudokuSolution = sudokuAlgorithm3.useAlgorithm(sudokuSolution);
-                    logger.info(sudokuSolution.validate() + " after alg 3");
-                    if (!sudokuSolution.validate()) {
-                        return sudokuSolution;
-                    }
-                    if (sudokuSolution.isSolved()) {
-                        return sudokuSolution;
-                    }
-                    sudoku.incrementTrial();
-                }
+                sudokuSolution = sudokuAlgorithm3.useAlgorithm(sudokuSolution);
             }
-            if (sudokuSolution.getHowManyCellsLeft() != 0) {
-                sudokuSolution = sudokuAlgorithm4.useAlgorithm(sudokuSolution);
-                logger.info(sudokuSolution.validate() + " after alg 4");
-                if (!sudokuSolution.validate()) {
-                    return sudokuSolution;
-                }
-                sudoku.incrementTrial();
-            }
+            sudokuSolution = sudokuAlgorithm4.useAlgorithm(sudokuSolution);
         }
         if (!sudokuSolution.isSolved()) {
             try {
                 notSolvedWriter.log(sudoku, sudokuSolution);
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error Occurred", e);
+                logger.error("Error Occurred", e);
             }
         }
         sudokuSolution.validate();
         return sudokuSolution;
     }
 
+    private boolean algorithmNeeded(Sudoku sudokuSolution) {
+        return sudokuSolution.isSudokuHasChanged() && sudokuSolution.getHowManyCellsLeft() != 0;
+    }
+
     public Sudoku solveSudokuStepByStep(Sudoku sudokuSolution, int algorithmNumber) {
         try {
             evaluateGuesses(sudokuSolution);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error Occurred", e);
+            logger.error("Error Occurred", e);
         }
 
         sudokuSolution.setTrial(1);

@@ -1,15 +1,17 @@
 package com.sudoku.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sudoku.beans.Cell;
 import com.sudoku.beans.Sudoku;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.sudoku.service.BrainImpl.DEFAULT_GUESSES;
 
 public class SudokuFileWriter {
 
@@ -81,7 +83,7 @@ public class SudokuFileWriter {
             List<Integer> row = sudoku1.get(i);
             for (int j = 0; j < row.size(); j++) {
                 Integer cell = row.get(j);
-                sudoku.getRowArray().get(i).getGroup().get(j).setValue(cell);
+                sudoku.getRowArray().get(i).getGroup().set(j, new Cell(cell, new ArrayList<>(DEFAULT_GUESSES)));
             }
         }
         return sudoku;

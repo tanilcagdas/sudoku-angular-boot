@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.sudoku.beans.Group;
@@ -11,7 +13,7 @@ import com.sudoku.beans.Sudoku;
 
 @Service
 public class SudokuValidator {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SudokuValidator.class);
 
 	public static boolean validate(Sudoku sudoku){
 		
@@ -24,9 +26,9 @@ public class SudokuValidator {
 			result = validatorHelper(sudoku.getThreeByThreeArray());
 		}
 		if(result){
-			System.out.println("sudoku is valid");
+			LOGGER.debug("sudoku is valid");
 		} else {
-			System.err.println("Sudoku is not valid");
+			LOGGER.error("Sudoku is not valid");
 		}
 		return result;
 		
@@ -45,7 +47,6 @@ public class SudokuValidator {
 				if(cell.getValue() == 0 && cell.getGuesses().size()==0){
 					result.set(false);
 					System.err.printf("Row %d Column %d value %d failed validation\n", cell.getRow().getIndex(),cell.getColumn().getIndex(), cell.getValue());
-//					cell.setGuesses(new ArrayList<>(BrainImpl.DEFAULT_GUESSES));
 					return;
 				}
 				values.add(cell.getValue());
@@ -54,9 +55,6 @@ public class SudokuValidator {
 				return;
 			}
 		});
-//		if(!result.get()){
-//			throw new RuntimeException("Sudoku is not valid");
-//		}
 		return result.get();
 	}
 	

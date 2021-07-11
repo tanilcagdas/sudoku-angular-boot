@@ -20,7 +20,7 @@ public class Cell extends Observable implements Observer {
 	private List<Integer> guesses;
 	private String color = "darkgray";
 
-	private static ArrayList<Integer> DEFAULT_GUESSES = new ArrayList<Integer>();
+	private static ArrayList<Integer> DEFAULT_GUESSES = new ArrayList<>();
 	{
 		if (DEFAULT_GUESSES.size() == 0) {
 			for (int i = 1; i < 10; i++)
