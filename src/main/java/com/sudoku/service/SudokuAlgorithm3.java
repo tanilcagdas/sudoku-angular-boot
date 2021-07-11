@@ -141,11 +141,11 @@ public class SudokuAlgorithm3 implements Algorithm {
             clearGuessesCell(group, number, difs.dif1);
         }
 
-        for (int number = 3; number < 8; number += 3) {
+        for (int number = 1; number < 8; number += 3) {
             clearGuessesCell(group, number, difs.dif2);
         }
 
-        for (int number = 6; number < 9; number += 3) {
+        for (int number = 2; number < 9; number += 3) {
             clearGuessesCell(group, number, difs.dif3);
         }
 

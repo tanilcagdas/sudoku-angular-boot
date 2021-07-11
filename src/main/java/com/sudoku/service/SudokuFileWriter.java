@@ -72,6 +72,11 @@ public class SudokuFileWriter {
         sudoku.setPuzzleLevel(puzzleLevel);
         Map sudokuMap = OBJECT_MAPPER.readValue(getFileName(sudoku), Map.class);
         List<List<Integer>> sudoku1 = (List<List<Integer>>) sudokuMap.get("sudoku");
+        return loadFromLists(sudoku, sudoku1);
+
+    }
+
+    public static Sudoku loadFromLists(Sudoku sudoku, List<List<Integer>> sudoku1) {
         for (int i = 0; i < sudoku1.size(); i++) {
             List<Integer> row = sudoku1.get(i);
             for (int j = 0; j < row.size(); j++) {
