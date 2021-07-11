@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.sudoku.service.BrainImpl.DEFAULT_GUESSES;
 
@@ -73,6 +74,28 @@ public class SudokuFileWriter {
         sudoku.setPuzzleId(puzzleId);
         sudoku.setPuzzleLevel(puzzleLevel);
         Map sudokuMap = OBJECT_MAPPER.readValue(getFileName(sudoku), Map.class);
+        List<List<Integer>> sudoku1 = (List<List<Integer>>) sudokuMap.get("sudoku");
+        return loadFromLists(sudoku, sudoku1);
+
+    }
+
+    public static Sudoku loadRandom() throws IOException {
+
+        Sudoku sudoku = new Sudoku();
+        File folder = new File("input");
+        File[] files = folder.listFiles();
+        int randomNum = ThreadLocalRandom.current().nextInt(0, files.length);
+        files[randomNum].getName();
+        System.out.println(files[randomNum]);
+        String[] strings = files[randomNum].getName().split("_");
+        System.out.println(strings[1]);
+        System.out.println(strings[2].replace(".json",""));
+
+
+
+        sudoku.setPuzzleId(Long.parseLong(strings[2].replace(".json","")));
+        sudoku.setPuzzleLevel(Integer.parseInt(strings[1]));
+        Map sudokuMap = OBJECT_MAPPER.readValue(files[randomNum], Map.class);
         List<List<Integer>> sudoku1 = (List<List<Integer>>) sudokuMap.get("sudoku");
         return loadFromLists(sudoku, sudoku1);
 

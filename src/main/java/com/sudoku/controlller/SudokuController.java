@@ -3,8 +3,8 @@ package com.sudoku.controlller;
 import java.io.IOException;
 import java.util.List;
 
+import com.sudoku.service.SudokuFileWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,16 +15,12 @@ import com.sudoku.beans.Cell;
 import com.sudoku.beans.Row;
 import com.sudoku.beans.Sudoku;
 import com.sudoku.service.BrainIF;
-import com.sudoku.service.ParserService;
 
 @RestController
 public class SudokuController {
 
 	@Autowired
 	private BrainIF brain;
-
-	@Autowired
-	private ParserService parserService;
 
 	@RequestMapping("/solve")
 	public List<Row> solve(@RequestBody RowArrayModel rowArrayModel) {
@@ -35,7 +31,7 @@ public class SudokuController {
 	public List<Row> solveRandom() {
 		Sudoku sudoku = null;
 		try {
-			sudoku = parserService.parseWebSudoku();
+			sudoku = SudokuFileWriter.loadRandom();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,8 +44,11 @@ public class SudokuController {
 	public List<Row> parseRandom() {
 		Sudoku sudoku = null;
 		try {
-			sudoku = parserService.parseWebSudoku(0, 4);
-			// sudoku = brain.solveSudoku(sudoku);
+//				sudoku = SudokuFileWriter.load(5978709421l, 4);
+				sudoku = SudokuFileWriter.loadRandom();
+				SudokuFileWriter.write(sudoku);
+
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
