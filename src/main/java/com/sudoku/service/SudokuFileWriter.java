@@ -6,10 +6,7 @@ import com.sudoku.beans.Sudoku;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.sudoku.service.BrainImpl.DEFAULT_GUESSES;
@@ -42,7 +39,7 @@ public class SudokuFileWriter {
     }
 
     private static File getFileName(Sudoku sudoku) {
-        return new File("sudokusolver/sudoku_" + sudoku.getPuzzleLevel() + "_" + sudoku.getPuzzleId() + ".json");
+        return new File("input/sudoku_" + sudoku.getPuzzleLevel() + "_" + sudoku.getPuzzleId() + ".json");
     }
 
     public static void convertUnsolvedToJson() throws IOException {
@@ -89,11 +86,10 @@ public class SudokuFileWriter {
         System.out.println(files[randomNum]);
         String[] strings = files[randomNum].getName().split("_");
         System.out.println(strings[1]);
-        System.out.println(strings[2].replace(".json",""));
+        System.out.println(strings[2].replace(".json", ""));
 
 
-
-        sudoku.setPuzzleId(Long.parseLong(strings[2].replace(".json","")));
+        sudoku.setPuzzleId(Long.parseLong(strings[2].replace(".json", "")));
         sudoku.setPuzzleLevel(Integer.parseInt(strings[1]));
         Map sudokuMap = OBJECT_MAPPER.readValue(files[randomNum], Map.class);
         List<List<Integer>> sudoku1 = (List<List<Integer>>) sudokuMap.get("sudoku");
@@ -110,5 +106,18 @@ public class SudokuFileWriter {
             }
         }
         return sudoku;
+    }
+
+    public static List<Map<Integer, Long>> list() {
+        List<Map<Integer, Long>> listOfIds = new ArrayList<>();
+        File folder = new File("input");
+        File[] files = folder.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            String[] strings = files[i].getName().split("_");
+            Map<Integer, Long> integerLongMap = Collections.singletonMap(Integer.parseInt(strings[1]), Long.parseLong(strings[2].replace(".json", "")));
+            listOfIds.add(integerLongMap);
+        }
+        return listOfIds;
+
     }
 }

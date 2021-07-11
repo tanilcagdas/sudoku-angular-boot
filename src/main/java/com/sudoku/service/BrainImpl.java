@@ -90,7 +90,7 @@ public class BrainImpl implements BrainIF {
     }
 
     private boolean algorithmNeeded(Sudoku sudokuSolution) {
-        return sudokuSolution.isSudokuHasChanged() && sudokuSolution.getHowManyCellsLeft() != 0;
+        return sudokuSolution.isSudokuHasChanged() && sudokuSolution.getHowManyCellsLeft() != 0 && sudokuSolution.getTrial() < 50;
     }
 
     public Sudoku solveSudokuStepByStep(Sudoku sudokuSolution, int algorithmNumber) {

@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -57,6 +59,29 @@ public class SudokuIntegrationTest {
                 "[4, 1, 5, 7, 9, 2, 8, 3, 6], " +
                 "[7, 6, 9, 3, 4, 8, 5, 1, 2]]",lists.toString());
 
+    }
+
+
+
+    @Test
+    public void testAllFromInput() throws IOException {
+        List<String> results = new ArrayList<>();
+        List<Map<Integer, Long>> sudokuIds = SudokuFileWriter.list();
+        for (Map<Integer, Long> sudokuId : sudokuIds) {
+            for (Map.Entry<Integer, Long> integerLongEntry : sudokuId.entrySet()) {
+                try {
+
+                    long start = System.currentTimeMillis();
+                    Sudoku sudoku = SudokuFileWriter.load(integerLongEntry.getValue(), integerLongEntry.getKey());
+                    sudoku = brain.solveSudoku(sudoku);
+                    results.add(String.format(" Sudoku %d %d is solved ? %b in %d ms",integerLongEntry.getValue(),integerLongEntry.getKey(),sudoku.isSolved(),
+                            System.currentTimeMillis() - start));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        results.forEach(System.out::println);
     }
 
 }
