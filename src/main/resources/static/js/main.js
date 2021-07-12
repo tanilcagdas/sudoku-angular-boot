@@ -41,8 +41,8 @@ app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider
 	// Home
 	.when("/", {
-		templateUrl : "partials/loby	.html",
-		controller : "lobyCtrl"
+		templateUrl : "partials/solver.html",
+		controller : "sudokuCtrl"
 	})
 	// Pages
 	.when("/game", {
@@ -51,7 +51,10 @@ app.config([ '$routeProvider', function($routeProvider) {
 	}).when("/solver", {
 		templateUrl : "partials/solver.html",
 		controller : "sudokuCtrl"
-	})
+	}).when("/lobby", {
+      		templateUrl : "partials/loby	.html",
+      		controller : "lobyCtrl"
+      	})
 
 	// Blog
 

@@ -64,8 +64,9 @@ public class SudokuIntegrationTest {
 
 
     @Test
-    public void testAllFromInput() throws IOException {
+    public void testAllFromInput() {
         List<String> results = new ArrayList<>();
+        List<String> failedResults = new ArrayList<>();
         List<Map<Integer, Long>> sudokuIds = SudokuFileWriter.list();
         for (Map<Integer, Long> sudokuId : sudokuIds) {
             for (Map.Entry<Integer, Long> integerLongEntry : sudokuId.entrySet()) {
@@ -74,14 +75,23 @@ public class SudokuIntegrationTest {
                     long start = System.currentTimeMillis();
                     Sudoku sudoku = SudokuFileWriter.load(integerLongEntry.getValue(), integerLongEntry.getKey());
                     sudoku = brain.solveSudoku(sudoku);
-                    results.add(String.format(" Sudoku %d %d is solved ? %b in %d ms",integerLongEntry.getValue(),integerLongEntry.getKey(),sudoku.isSolved(),
-                            System.currentTimeMillis() - start));
+                    if(sudoku.isSolved()){
+                        results.add(String.format(" Sudoku %d %d is solved ? %b in %d ms",integerLongEntry.getValue(),integerLongEntry.getKey(),sudoku.isSolved(),
+                                System.currentTimeMillis() - start));
+                    } else {
+                        failedResults.add(String.format(" Sudoku %d %d is solved ? %b in %d ms",integerLongEntry.getValue(),integerLongEntry.getKey(),sudoku.isSolved(),
+                                System.currentTimeMillis() - start));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
         results.forEach(System.out::println);
+        System.out.println();
+        failedResults.forEach(System.out::println);
+        System.out.println();
+        System.out.printf("%d success %d fail", results.size(), failedResults.size());
     }
 
 }

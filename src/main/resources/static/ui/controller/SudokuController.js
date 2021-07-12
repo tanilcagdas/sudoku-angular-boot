@@ -76,7 +76,22 @@
  	};
 
  	$scope.loadDemo = function(){
- 		$rootScope.sudoku  = SudokuService.loadDemoSudoku($rootScope.sudoku )
+        res = SudokuService.parse();
+            res.then(function(response) {
+                var finalData = response.data;
+
+                for (i = 0; i < finalData.length; i++) {
+
+                    sudokuGroup = $rootScope.sudoku.rowArray[i].group;
+                    restGroup = finalData[i].group;
+                    for (j = 0; j < sudokuGroup.length; j++) {
+                        sudokuGroup[j].value = restGroup[j].value != 0 ? restGroup[j].value : '';
+                        sudokuGroup[j].found = restGroup[j].found;
+                    }
+                }
+            }, function errorCallback(response) {
+                console.log(response.status + " : " + response.statusText);
+            });
  	};
 
  	$scope.loadFromJava = function(){
@@ -86,25 +101,7 @@
  	init();
 
 
- 	res = SudokuService.parse();
- 	res.then(function(response) {
- 		var finalData = response.data;
-
- 		for (i = 0; i < finalData.length; i++) { 
-
- 			sudokuGroup = $rootScope.sudoku.rowArray[i].group;
- 			restGroup = finalData[i].group;
- 			for (j = 0; j < sudokuGroup.length; j++) { 
- 				sudokuGroup[j].value = restGroup[j].value;
- 				sudokuGroup[j].found = restGroup[j].found;
-
- 			}
-
- 		}
-
- 	}, function errorCallback(response) {
- 		console.log(response.status + " : " + response.statusText);
- 	});
+ 	$scope.loadDemo();
 
  	$rootScope.solve = function(){
  	res2 = SudokuService.solveSudoku($rootScope.sudoku);

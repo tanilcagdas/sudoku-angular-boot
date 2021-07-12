@@ -162,12 +162,13 @@ footer {
 
 .cell {
     margin: auto ;
-    width: 2em;
+    width: 3em;
+    height:3em;
     text-align: center;
 }
 .column {
-    width:30px ;
-    height:20px;
+    width:3em ;
+    height:3em;
 }
 .sudoku-table{
     margin: auto;
